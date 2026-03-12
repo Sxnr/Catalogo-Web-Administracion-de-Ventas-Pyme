@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocolo de Pago | Limit Brake Wear</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="confirm-page">
+    <div class="glass-container">
+        <div class="status-header">
+            <div class="pulse-icon"></div>
+            <h2>PROTOCOLO DE RESERVA ACTIVO</h2>
+        </div>
+
+        <div class="timer-section">
+            <p>EL EQUIPAMIENTO SE LIBERARÁ EN:</p>
+            <div id="countdown">20:00</div>
+        </div>
+
+        <div class="resumen-box">
+            <h3>RESUMEN DEL ARSENAL</h3>
+            <div id="detalle-final"></div>
+        </div>
+
+        <div class="transferencia-box">
+    <h3>DATOS DE TRANSFERENCIA</h3>
+    
+    <div class="dato-fila">
+        <span>Banco:</span> 
+        <strong>Mercado Pago</strong>
+    </div>
+    
+    <div class="dato-fila">
+        <span>Tipo Cuenta:</span> 
+        <strong>Vista</strong>
+    </div>
+
+    <div class="dato-fila">
+        <span>Número de Cuenta:</span> 
+        <div class="copy-group">
+            <strong id="num-cuenta">1048799611</strong>
+            <button class="btn-copy" onclick="copiarTexto('num-cuenta')">📋</button>
+        </div>
+    </div>
+
+    <div class="dato-fila">
+        <span>Nombre:</span> 
+        <strong>Francisco Carrera Fernandez</strong>
+    </div>
+
+    <div class="dato-fila">
+        <span>RUT:</span> 
+        <div class="copy-group">
+            <strong id="rut-v">22.030.980-0</strong>
+            <button class="btn-copy" onclick="copiarTexto('rut-v')">📋</button>
+        </div>
+    </div>
+
+    <div class="dato-fila">
+        <span>Correo:</span> 
+        <strong>franciscocarrera956@gmail.com</strong>
+    </div>
+    </div>
+
+    <script>
+    function copiarTexto(id) {
+    const texto = document.getElementById(id).innerText;
+    navigator.clipboard.writeText(texto);
+    alert("Copiado al portapapeles: " + texto);
+    }
+    </script>
+
+        <div class="instrucciones-v">
+            <p>⚡ 1. Transfiere el monto total indicado.</p>
+            <p>⚡ 2. Toma captura de esta pantalla y del comprobante.</p>
+            <p>⚡ 3. Presiona el botón para validar en Instagram DM.</p>
+        </div>
+
+        <button id="btn-final-ig" onclick="finalizarTodo()">
+            VALIDAR ORDEN Y ENVIAR COMPROBANTE
+        </button>
+    </div>
+
+    <script>
+        const pedido = JSON.parse(localStorage.getItem('ultimoPedido'));
+
+// 1. LÓGICA DEL CONTADOR PERSISTENTE
+let tiempoRestante;
+const ahora = Date.now();
+// Buscamos si ya había una hora de expiración guardada
+const expiracion = localStorage.getItem('expiracionReserva');
+
+if (expiracion) {
+    tiempoRestante = Math.floor((expiracion - ahora) / 1000);
+} else {
+    // Si es primera vez, fijamos 20 minutos desde ahora
+    const nuevaExpiracion = ahora + (20 * 60 * 1000);
+    localStorage.setItem('expiracionReserva', nuevaExpiracion);
+    tiempoRestante = 1200;
+}
+
+const display = document.getElementById('countdown');
+
+const timerInterval = setInterval(() => {
+    if (tiempoRestante <= 0) {
+        clearInterval(timerInterval);
+        display.innerText = "EXPIRADO";
+        alert("El tiempo de reserva ha terminado. El stock ha sido liberado.");
+        window.location.href = "index.html";
+        return;
+    }
+
+    let min = Math.floor(tiempoRestante / 60);
+    let seg = tiempoRestante % 60;
+    display.innerText = `${min}:${seg < 10 ? '0' : ''}${seg}`;
+    tiempoRestante--;
+
+    // 2. VERIFICACIÓN DE PAGO (Escucha al Admin)
+    if (localStorage.getItem('pagoAprobado') === 'true') {
+        clearInterval(timerInterval);
+        mostrarPantallaExito();
+    }
+}, 1000);
+
+function mostrarPantallaExito() {
+    // Limpiamos la señal de aprobación para futuros pedidos
+    localStorage.removeItem('pagoAprobado');
+    localStorage.removeItem('expiracionReserva');
+    
+    // Cambiamos el diseño de la página a "Confirmado"
+    document.querySelector('.glass-container').innerHTML = `
+        <div class="success-animation" style="text-align:center; padding:40px;">
+            <h1 style="color:#25d366; font-family:'Orbitron'; font-size:3em;">✓</h1>
+            <h2 style="font-family:'Orbitron';">PAGO VALIDADO</h2>
+            <p>Hemos confirmado tu transferencia.</p>
+            <p style="background:#111; padding:15px; border-radius:8px; border:1px dashed var(--cian);">
+                Tu armadura <strong>${pedido.items.map(i => i.nombre).join(', ')}</strong> está siendo preparada para el envío.
+            </p>
+            <button onclick="window.location.href='index.html'" class="btn-regresar" style="margin-top:20px;">VOLVER AL INICIO</button>
+        </div>
+    `;
+}
+    </script>
+
+    <button class="btn-regresar" onclick="regresarAlCatalogo()">
+    <span>⬅</span> VOLVER AL ARSENAL
+    </button>
+
+    <script>
+    function regresarAlCatalogo() {
+    localStorage.removeItem('expiracionReserva'); // Borra el tiempo
+    window.location.href = "index.html";
+    }
+
+function finalizarTodo() {
+    // 1. Obtenemos los datos del pedido guardado
+    const pedido = JSON.parse(localStorage.getItem('ultimoPedido'));
+    
+    if (!pedido) {
+        alert("No se encontró información del pedido.");
+        return;
+    }
+
+    // 2. Preparamos el mensaje para Instagram
+    const mensaje = `¡Hola! Acabo de realizar un pedido en Limit Brake Wear.
+📦 Detalle: ${pedido.items.map(i => i.nombre + " (" + i.talla + ")").join(", ")}
+💰 Total: ${pedido.total}
+👤 Cliente: ${pedido.envio.nombre}
+🆔 RUT: ${pedido.envio.rut}
+📍 Dirección: ${pedido.envio.dir}, ${pedido.envio.com}
+
+Adjunto el comprobante de transferencia ahora.`;
+
+    // 3. Codificamos el mensaje para URL
+    const mensajeEncoded = encodeURIComponent(mensaje);
+
+    // 4. Abrimos tu Instagram (Reemplaza con tu usuario real)
+    // El enlace "direct" abre directamente tu chat
+    window.open(`https://www.instagram.com/direct/t/18039083042546783/`, '_blank');
+
+    // 5. Opcional: Copiar al portapapeles por si el cliente quiere pegar el texto
+    navigator.clipboard.writeText(mensaje).then(() => {
+        alert("Mensaje copiado al portapapeles. Pégalo en el chat de Instagram junto a tu comprobante.");
+    });
+}
+
+    </script>
+</body>
+</html>
+

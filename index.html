@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Limit Brake Wear | Checkout</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <img src="logo.png" alt="Limit Brake Logo" class="logo">
+        <h1>INITIAL ARMOR SERIES</h1>
+        <p>Selecciona tu equipamiento de alto rendimiento</p>
+    </header>
+
+    <main id="catalogo"></main>
+
+    <aside id="carrito-container">
+        <h2>TU ARSENAL</h2>
+        <div id="lista-carrito"><p>El arsenal está vacío.</p></div>
+        <hr>
+        
+        <select id="region-select" onchange="actualizarEnvio()">
+            <option value="presencial">Entrega Presencial (Metro Santiago / Puente Alto)</option>
+            <option value="mismaZona">Región Metropolitana (Envio local Stgo)</option>
+        <option value="stgoCentro">Otras Regiones (Zona Centro/Sur/Norte)</option>
+        <option value="extremo">Zonas Extremas (Arica / Punta Arenas / Coyhaique)</option>
+        </select>
+            
+            <div id="datos-cliente" style="display:none; margin-top:20px;">
+    <h3 style="color:var(--cian); font-family:'Orbitron';">DATOS DE DESPACHO</h3>
+    <input type="text" id="nombre-cli" placeholder="Nombre Completo" class="input-form">
+    <input type="text" id="rut-cli" placeholder="RUT (ej: 12.345.678-9)" class="input-form">
+    <input type="email" id="correo-cli" placeholder="Correo Electrónico" class="input-form">
+    <input type="tel" id="tel-cli" placeholder="Número de Teléfono (ej: +569...)" class="input-form">
+    <input type="text" id="direccion-cli" placeholder="Dirección de Envío" class="input-form">
+    <input type="text" id="comuna-cli" placeholder="Comuna" class="input-form">
+    <textarea id="ref-cli" placeholder="Referencias de la dirección (Opcional)" class="input-form" style="height:60px;"></textarea>
+</div>
+</div>
+        </div>
+
+        <h3>Total: <span id="total-pago">$0</span></h3>
+        
+        <div class="terminos-compra">
+            <p>🛡️ <strong>Protocolo de Reserva:</strong></p>
+            <ul>
+                <li>Se abrirá tu chat de Instagram con el pedido.</li>
+                <li>Las prendas se reservan por <strong>20 minutos</strong>.</li>
+                <li>Debes enviar el comprobante por DM para validar.</li>
+            </ul>
+        </div>
+
+        <button class="btn-final" onclick="enviarInstagram()">
+        ENVIAR ORDEN AL DM ⚡
+        </button>
+        </button>
+    </aside>
+
+    <script src="script.js"></script>
+</body>
+<button onclick="resetStock()" style="margin-top: 50px; background: none; border: 1px solid #222; color: #444; cursor: pointer; font-size: 10px; padding: 5px;">
+    REINICIAR SISTEMA DE STOCK
+</button>
+</html>
